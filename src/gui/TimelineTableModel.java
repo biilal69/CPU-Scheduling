@@ -1,26 +1,30 @@
+package gui;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import java.util.*;
+import model.TimeStep;
 
 public class TimelineTableModel extends AbstractTableModel {
-    private static final String[] COLS = {"Time", "Process", "Tier 1", "Tier 2"};
-    private List<TimelineEntry> rows = new ArrayList<>();
+    private static final String[] COLS = {"Time", "Running", "Event", "Queues"};
+    private List<TimeStep> steps = new ArrayList<>();
 
-    public void setRows(List<TimelineEntry> rows) {
-        this.rows = rows;
+    public void setSteps(List<TimeStep> steps) {
+        this.steps = steps;
         fireTableDataChanged();
     }
 
-    @Override public int getRowCount() { return rows.size(); }
+    @Override public int getRowCount() { return steps.size(); }
     @Override public int getColumnCount() { return COLS.length; }
     @Override public String getColumnName(int c) { return COLS[c]; }
 
     @Override public Object getValueAt(int r, int c) {
-        TimelineEntry e = rows.get(r);
+        TimeStep s = steps.get(r);
         switch (c) {
-            case 0: return e.time;
-            case 1: return e.running;
-            case 2: return e.tier1;
-            default: return e.tier2;
+            case 0: return s.getTime();
+            case 1: return s.getRunning();
+            case 2: return s.getEvent();
+            default: return "<html>" + String.join("<br>", s.getQueueLines()) + "</html>";
         }
     }
 }
